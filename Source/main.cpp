@@ -26,6 +26,8 @@ int main()
 		return 1;
 	}
 
+	SDL_DisplayMode cur;
+
 	SDL_Texture *tex = loadTexture("Res/hello.bmp", ren);
 	bool quit = false;
 	SDL_Event e;
@@ -40,13 +42,23 @@ int main()
 			}
 			if (e.type == SDL_KEYDOWN)
 			{
-				if(e.key.keysym.sym == SDLK_q)
+				switch(e.key.keysym.sym)
 				{
+				case SDLK_q:
 					SDL_CaptureMouse(SDL_FALSE);
 					SDL_SetRelativeMouseMode(SDL_FALSE);
-				}
-				if(e.key.keysym.sym == SDLK_ESCAPE)
+					break;
+				case SDLK_ESCAPE:
 					quit = true;
+					break;
+				case SDLK_f:
+					SDL_GetCurrentDisplayMode(0, &cur);
+					SDL_SetWindowSize(win, cur.w, cur.h);
+					SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN);
+					break;
+				default:
+					printf("No function for key %c\n", e.key.keysym.sym);
+				}
 			}
 			if (e.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -57,13 +69,13 @@ int main()
 			{
 				if(e.motion.xrel > x)
 				{
-					x = e.motion.x;
+					x = e.motion.xrel;
 					printf("x: %i y: %i\n", x, y);
 				}
 
 				if(e.motion.yrel > y)
 				{
-					y = e.motion.y;
+					y = e.motion.yrel;
 					printf("x: %i y: %i\n", x, y);
 				}
 
